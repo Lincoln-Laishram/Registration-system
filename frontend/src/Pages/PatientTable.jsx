@@ -39,10 +39,6 @@ export const PatientTable = () => {
     };
 
     const HandleDelete = async (id) => {
-        const isConfirmed = window.confirm(`Are you sure you want to delete the pateint datas?`);
-        if (!isConfirmed) {
-            return;
-        }
         try {
             const response = await fetch(`http://localhost:5000/patient/${id}`, {
                 method: 'DELETE',
@@ -66,10 +62,12 @@ export const PatientTable = () => {
                     <TableRow>
                         <TableHead>Sl</TableHead>
                         <TableHead>Pid</TableHead>
-                        <TableHead>Name</TableHead>
+                        <TableHead>First Name</TableHead>
+                        <TableHead>Last Name</TableHead>
                         <TableHead>Age</TableHead>
                         <TableHead>Disease</TableHead>
                         <TableHead>Registration date</TableHead>
+                        <TableHead>Phone Number</TableHead>
                         <TableHead>Status</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -78,12 +76,14 @@ export const PatientTable = () => {
                         <TableRow key={data.patient_id}> 
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{data.patient_id}</TableCell>
-                            <TableCell>{data.name}</TableCell>
+                            <TableCell>{data.firstname}</TableCell>
+                            <TableCell>{data.lastname}</TableCell>
                             <TableCell>{data.age}</TableCell>
                             <TableCell>{data.disease}</TableCell>
                             <TableCell>
                                 {new Date(data.date).toLocaleDateString("en-GB")}
                             </TableCell>
+                            <TableCell>{data.phoneNumber}</TableCell>
                             <TableCell>
                                 <div className="dark:bg-black/10 flex items-center justify-center gap-3">
                                     <p className="text-lg">Registered</p>

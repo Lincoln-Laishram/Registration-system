@@ -5,9 +5,11 @@ export const HandleRegister = async (event, inpt, setInpt) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                name: inpt.patientName,
+                firstname: inpt.patientFirstName,
+                lastname: inpt.patientLastName,                
                 age: inpt.patientAge,
                 disease: inpt.disease,
+                phoneNumber: inpt.phoneNumber,
             }),
         });
 
@@ -17,7 +19,7 @@ export const HandleRegister = async (event, inpt, setInpt) => {
 
         const data = await response.json();
         alert("Registration successful...");
-        setInpt({ patientName: "", patientAge: null, disease: "" });
+        window.location.reload();
         console.log("Patient added:", data);
     } catch (error) {
         console.error("Error adding patient:", error);

@@ -14,10 +14,12 @@ mongoose.connect("mongodb://localhost:27017/PatientsDatas").then(()=>{
 const userSchema = mongoose.Schema(
     {
         patient_id:Number,
-        name:String,
-        age:Number,
+        firstname:String,
+        lastname:String,
+        age:String,
         disease:String,
-        date:{ type: Date, default: Date.now }
+        date:{ type: Date, default: Date.now },
+        phoneNumber:String
     }
 );
 
@@ -29,11 +31,7 @@ app.get('/users',async(req,res)=>{
 })
 
 
-const validatePatient =[
-    body('name').isString().notEmpty().escape().withMessage('Name is required'),
-    body('disease').isString().notEmpty().escape().withMessage('Disease is required'),
-]
-app.get('/patient',validatePatient, async (req, res) => {
+app.get('/patient', async (req, res) => {
     try{
         const patient = await userModal.find();
         res.status(200).json(patient);
@@ -42,19 +40,19 @@ app.get('/patient',validatePatient, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-app.post('/patient', validatePatient, async (req, res) => {
+app.post('/patient',  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-        const { name, age, disease } = req.body;
+        const { firstname, lastname, disease, age, phoneNumber  } = req.body;
 
         const lastPatient = await userModal.findOne().sort({ patient_id: -1 }); 
         const newPatientId = lastPatient ? lastPatient.patient_id + 1 : 100; // If no patients, start from 1
 
-        const newPatient = await userModal.create({ patient_id: newPatientId, name, age, disease });
+        const newPatient = await userModal.create({ patient_id: newPatientId, firstname, lastname, age, disease, phoneNumber });
 
         res.status(201).json(newPatient);
     } catch (error) {
@@ -63,7 +61,7 @@ app.post('/patient', validatePatient, async (req, res) => {
     }
 });
 
-app.patch('/patient/:id', validatePatient, async (req, res) => {
+app.patch('/patient/:id', async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
