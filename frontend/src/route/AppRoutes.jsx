@@ -3,7 +3,7 @@ import App from "../App";
 import { PatientDatas } from "../Pages/PatientDatas";
 import { PatientTable } from "../Pages/PatientTable";
 import { NoPage } from "../Pages/NoPage";
-import { Admin } from "../Pages/Admin";
+import { AdminLogin } from "@/Pages/AdminLogin";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/admin",
-        element: <Admin/>,
+        element: <AdminLogin/>,
     },
     {
         path: "*",

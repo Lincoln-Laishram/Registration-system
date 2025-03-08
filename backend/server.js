@@ -1,16 +1,29 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import {body,validationResult} from 'express-validator';
 import cors from 'cors';
 const app = express();
 app.use(cors());
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
-
-mongoose.connect("mongodb://localhost:27017/PatientsDatas").then(()=>{
-    console.log("Database connection established");
+const patientDB = mongoose.createConnection("mongodb://localhost:27017/PatientsDatas")
+patientDB.on("connected",()=>{
+    console.log("Patient database connected successfully");
 })
-.catch(err=>console.log(err));
+
+patientDB.on("error", (err) => {
+    console.error("Error connecting to PatientsDatas:", err);
+});
+
+
+const adminDB = mongoose.createConnection("mongodb://localhost:27017/admin")
+
+adminDB.on("connected",()=>{
+    console.log("Admin database connected successfully");
+})
+adminDB.on("error",()=>{
+    console.error("Error connecting to Admin:", err);
+})
+
 const userSchema = mongoose.Schema(
     {
         patient_id:Number,
@@ -20,15 +33,29 @@ const userSchema = mongoose.Schema(
         disease:String,
         date:{ type: Date, default: Date.now },
         phoneNumber:String
-    }
+    },
+    {collection:"patients"}
 );
-
-const userModal = mongoose.model("patients",userSchema);
+const adminSchema = mongoose.Schema(
+    {
+        admin_id:String,
+        admin_password:String,
+    },
+    { collection: "adminUsers" }
+)
+const userModal = patientDB.model("patients",userSchema);
+const adminModal = adminDB.model("adminUsers",adminSchema);
+console.log(adminModal);
 
 app.get('/users',async(req,res)=>{
     const userData = await userModal.find();
     res.json(userData);
 })
+app.get('/admin', async (req, res) => {
+        const adminData = await adminModal.find();
+        res.json(adminData);
+});
+
 
 
 app.get('/patient', async (req, res) => {
