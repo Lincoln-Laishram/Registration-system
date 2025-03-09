@@ -1,131 +1,134 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import cors from 'cors';
-const app = express();
-app.use(cors());
-app.use(express.json());
-const PORT = process.env.PORT || 5000;
-const patientDB = mongoose.createConnection("mongodb://localhost:27017/PatientsDatas")
-patientDB.on("connected",()=>{
-    console.log("Patient database connected successfully");
-})
 
+dotenv.config();
+
+const app = express();
+app.use(cors({ origin: '*', credentials: true }));
+app.use(express.json());
+
+const PORT = process.env.PORT;
+
+const patientDB = mongoose.createConnection(process.env.URL_DB);
+patientDB.on("connected", () => {
+    console.log("Patient database connected successfully");
+});
 patientDB.on("error", (err) => {
     console.error("Error connecting to PatientsDatas:", err);
 });
 
-
-const adminDB = mongoose.createConnection("mongodb://localhost:27017/admin")
-
-adminDB.on("connected",()=>{
+// Connect to Admin Database
+const adminDB = mongoose.createConnection(process.env.URL_ADMIN);
+adminDB.on("connected", () => {
     console.log("Admin database connected successfully");
-})
-adminDB.on("error",()=>{
+});
+adminDB.on("error", (err) => {
     console.error("Error connecting to Admin:", err);
-})
+});
 
-const userSchema = mongoose.Schema(
+// Define Schemas
+const userSchema = new mongoose.Schema(
     {
-        patient_id:Number,
-        firstname:String,
-        lastname:String,
-        age:String,
-        disease:String,
-        date:{ type: Date, default: Date.now },
-        phoneNumber:String
+        patient_id: Number,
+        firstname: String,
+        lastname: String,
+        age: String,
+        disease: String,
+        date: { type: Date, default: Date.now },
+        phoneNumber: String
     },
-    {collection:"patients"}
+    { collection: "patients" }
 );
-const adminSchema = mongoose.Schema(
+
+const adminSchema = new mongoose.Schema(
     {
-        admin_id:String,
-        admin_password:String,
+        admin_id: String,
+        admin_password: String,
     },
     { collection: "adminUsers" }
-)
-const userModal = patientDB.model("patients",userSchema);
-const adminModal = adminDB.model("adminUsers",adminSchema);
-console.log(adminModal);
+);
 
-app.get('/users',async(req,res)=>{
-    const userData = await userModal.find();
-    res.json(userData);
-})
-app.get('/admin', async (req, res) => {
-        const adminData = await adminModal.find();
-        res.json(adminData);
-});
+// Define Models
+const patientModel = patientDB.model("patients", userSchema);
+const adminModel = adminDB.model("adminUsers", adminSchema);
 
-
-
-app.get('/patient', async (req, res) => {
-    try{
-        const patient = await userModal.find();
-        res.status(200).json(patient);
-    }
-    catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-app.post('/patient',  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
+// Routes
+app.get('/patients', async (req, res) => {
     try {
-        const { firstname, lastname, disease, age, phoneNumber  } = req.body;
+        const patientData = await patientModel.find();
+        res.json(patientData);
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error", message: error.message });
+    }
+});
 
-        const lastPatient = await userModal.findOne().sort({ patient_id: -1 }); 
-        const newPatientId = lastPatient ? lastPatient.patient_id + 1 : 100; // If no patients, start from 1
+app.get('/admin', async (req, res) => {
+    try {
+        const adminData = await adminModel.find();
+        res.json(adminData);
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error", message: error.message });
+    }
+});
 
-        const newPatient = await userModal.create({ patient_id: newPatientId, firstname, lastname, age, disease, phoneNumber });
+app.post('/patients', async (req, res) => {
+    try {
+        const { firstname, lastname, disease, age, phoneNumber } = req.body;
+
+        const lastPatient = await patientModel.findOne().sort({ patient_id: -1 });
+        const newPatientId = lastPatient ? lastPatient.patient_id + 1 : 100;
+
+        const newPatient = await patientModel.create({
+            patient_id: newPatientId,
+            firstname,
+            lastname,
+            age,
+            disease,
+            phoneNumber
+        });
 
         res.status(201).json(newPatient);
     } catch (error) {
         console.error("Error adding patient:", error);
-        res.status(500).json({ error: 'Internal server error', message: error.message });
+        res.status(500).json({ error: "Internal server error", message: error.message });
     }
 });
 
-app.patch('/patient/:id', async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
+app.patch('/patients/:id', async (req, res) => {
     try {
-        const id = parseInt(req.params.id); // Assuming patient_id is unique
-        const { name, age, disease } = req.body;
+        const id = parseInt(req.params.id);
+        const { firstname, lastname, age, disease, phoneNumber} = req.body;
 
-        const updatedPatient = await userModal.findOneAndUpdate(
-            { patient_id: id }, 
-            { name, age, disease }, 
-            { new: true } 
+        const updatedPatient = await patientModel.findOneAndUpdate(
+            { patient_id: id },
+            { firstname, lastname, age, disease, phoneNumber},
+            { new: true }
         );
 
         if (!updatedPatient) {
-            return res.status(404).json({ error: 'Patient not found' });
+            return res.status(404).json({ error: "Patient not found" });
         }
 
         res.status(200).json(updatedPatient);
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: "Internal server error", message: error.message });
     }
 });
 
-app.delete('/patient/:id', async (req, res) => {
+app.delete('/patients/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const deletedPatient = await userModal.findOneAndDelete({ patient_id: id });
+        const deletedPatient = await patientModel.findOneAndDelete({ patient_id: id });
 
         if (!deletedPatient) {
-            return res.status(404).json({ error: 'Patient not found' });
+            return res.status(404).json({ error: "Patient not found" });
         }
 
-        res.status(204).send(); // 204 means "No Content"
+        res.status(204).send();
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: "Internal server error", message: error.message });
     }
 });
 

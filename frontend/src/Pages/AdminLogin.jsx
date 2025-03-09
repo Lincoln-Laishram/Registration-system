@@ -10,7 +10,7 @@ export const AdminLogin = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:5000/admin");
+                const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/admin`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -48,18 +48,21 @@ export const AdminLogin = () => {
 
     return (
         <>
-            <h1>THIS IS ADMIN LOGIN PAGE...</h1>
             {!state ?
                 <>
-                    <form onSubmit={HandleSubmit}>
-                        <input type="text" name="admin_id" placeholder="Enter ID" onChange={HandleChange} required /> <br />
-                        <input type="password" name="admin_password" placeholder="Enter password" onChange={HandleChange} required /> <br />
-                        <button type="submit">Login</button>
-                    </form>
+                    <div className="flex items-center justify-center h-screen w-screen">
+                        <form onSubmit={HandleSubmit} className="flex flex-col bg-white p-6 rounded-lg shadow-gray-600 shadow-md max-w-lg w-full">
+                            <input type="text" name="admin_id" placeholder="Enter ID" onChange={HandleChange} required className="input-field" />
+                            <input type="password" name="admin_password" placeholder="Enter Password" onChange={HandleChange} required className="input-field" />
+                            <button type="submit" className="btn-primary">Login</button>
+                            <p className="text-center text-red-500 mt-2">{loginMessage}</p>
+                        </form>
+                    </div>
                 </> :
                 <>
-                    <PatientTable/>
-                </>}
+                    <PatientTable />
+                </>
+            }
         </>
     )
 }

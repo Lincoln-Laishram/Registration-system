@@ -16,7 +16,7 @@ export const PatientTable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:5000/patient");
+                const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/patients`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -40,7 +40,7 @@ export const PatientTable = () => {
 
     const HandleDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/patient/${id}`, {
+            const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/patients/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {

@@ -1,4 +1,4 @@
-import { Register } from "./Pages/Register"
+import { Register } from "./Pages/Home"
 
 
 function App() {

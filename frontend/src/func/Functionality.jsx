@@ -1,7 +1,7 @@
 export const HandleRegister = async (event, inpt, setInpt) => {
     event.preventDefault();
     try {
-        const response = await fetch("http://localhost:5000/patient", {
+        const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/patients`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -38,7 +38,7 @@ export const HandleDelete = async (event, pid, setPid) => {
         return;
     }
     try {
-        const deleteResponse = await fetch(`http://localhost:5000/patient/${Number(pid)}`, {
+        const deleteResponse = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/patients/${Number(pid)}`, {
             method: "DELETE",
         });
 
@@ -62,11 +62,14 @@ export const HandleUpdate = async (event, editId, setEditId, setEditData, setEdi
         return;
     }
     try {
-        const response = await fetch(`http://localhost:5000/patient/${Number(editId)}`, {
+        const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/patients/${Number(editId)}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                name: editData.patientName,
+                firstname: editData.patientFirstName,
+                lastname: editData.patientLastName,                
+                age: editData.patientAge,
+                phoneNumber: editData.phoneNumber,
                 disease: editData.disease,
             }),
         });
@@ -76,7 +79,6 @@ export const HandleUpdate = async (event, editId, setEditId, setEditData, setEdi
 
         alert("Patient updated successfully.");
 
-        // Reset states after update
         setEditId(null);
         setEditData({ patientName: "", disease: "" });
         setEditForm(false);
