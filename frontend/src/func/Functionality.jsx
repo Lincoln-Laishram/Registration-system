@@ -1,15 +1,29 @@
 export const HandleRegister = async (event, inpt, setInpt) => {
     event.preventDefault();
+
+    // Trim values to remove leading and trailing spaces
+    const firstname = inpt.patientFirstName.trim();
+    const lastname = inpt.patientLastName.trim();
+    const age = inpt.patientAge.toString().trim();
+    const disease = inpt.disease.trim();
+    const phoneNumber = inpt.phoneNumber.trim();
+
+    // Check for empty values
+    if (!firstname || !lastname || !age || !disease || !phoneNumber) {
+        alert("Please fill in all fields correctly.");
+        return;
+    }
+
     try {
         const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/patients`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                firstname: inpt.patientFirstName,
-                lastname: inpt.patientLastName,                
-                age: inpt.patientAge,
-                disease: inpt.disease,
-                phoneNumber: inpt.phoneNumber,
+                firstname,
+                lastname,                
+                age: Number(age),
+                disease,
+                phoneNumber,
             }),
         });
 
@@ -25,7 +39,6 @@ export const HandleRegister = async (event, inpt, setInpt) => {
         console.error("Error adding patient:", error);
     }
 };
-
 export const HandleDelete = async (event, pid, setPid) => {
     event.preventDefault();
 
