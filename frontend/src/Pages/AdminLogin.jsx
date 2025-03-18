@@ -11,6 +11,7 @@ export const AdminLogin = () => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/admin`);
+                console.log(response);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -48,8 +49,8 @@ export const AdminLogin = () => {
 
     return (
         <>
-            {!state ?
-                <>
+            {/* {!state ? */}
+                {/* <>
                     <div className="flex items-center justify-center h-screen w-screen">
                         <form onSubmit={HandleSubmit} className="flex flex-col bg-white p-6 rounded-lg shadow-gray-600 shadow-md max-w-lg w-full">
                             <input type="text" name="admin_id" placeholder="Enter ID" onChange={HandleChange} required className="input-field" />
@@ -58,11 +59,11 @@ export const AdminLogin = () => {
                             <p className="text-center text-red-500 mt-2">{loginMessage}</p>
                         </form>
                     </div>
-                </> :
-                <>
+                </> 
+                : */}
                     <PatientTable />
-                </>
-            }
+            
+            {/* } */}
         </>
     )
 }
