@@ -1,14 +1,12 @@
 export const HandleRegister = async (event, inpt, setInpt) => {
     event.preventDefault();
 
-    // Trim values to remove leading and trailing spaces
     const firstname = inpt.patientFirstName.trim();
     const lastname = inpt.patientLastName.trim();
     const age = inpt.patientAge.toString().trim();
     const disease = inpt.disease.trim();
     const phoneNumber = inpt.phoneNumber.trim();
 
-    // Check for empty values
     if (!firstname || !lastname || !age || !disease || !phoneNumber) {
         alert("Please fill in all fields correctly.");
         return;

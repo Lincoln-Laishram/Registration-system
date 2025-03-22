@@ -6,6 +6,7 @@ import {
   HandleDelete,
   HandleUpdate,
 } from "@/func/Functionality";
+    // Check for empty values
 
 export const Register = () => {
   const [inpt, setInpt] = useState({
