@@ -7,7 +7,6 @@ import {
   HandleUpdate,
 } from "@/func/Functionality";
     // Check for empty values
-
 export const Register = () => {
   const [inpt, setInpt] = useState({
     patientFirstName: "",
@@ -148,7 +147,7 @@ export const Register = () => {
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-800">
               Age
-            </label>
+            </label> 
             <input
               type="number"
               value={inpt.patientAge}
@@ -158,6 +157,9 @@ export const Register = () => {
               required
               className="w-full px-4 py-2 border border-gray-400 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition duration-150"
             />
+          </div>
+          <div>
+            <input type="radio" name="gender" value="Male" onClick={(e)=>{console.log(e.target.value)}}/> Male <input type="radio" name="gender" value="Female" onClick={(e)=>{console.log(e.target.value)}}/> Female
           </div>
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-800">
