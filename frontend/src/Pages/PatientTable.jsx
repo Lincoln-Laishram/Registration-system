@@ -10,7 +10,7 @@ import {
 import { FaRegTrashCan } from "react-icons/fa6";
 
 export const PatientTable = () => {
-  // const [datas, setDatas] = useState([]);
+  const [datas, setDatas] = useState([]);
   const [searchName, setSearchName] = useState("");
 
   let patients = [
@@ -129,24 +129,24 @@ export const PatientTable = () => {
 
   const [toggleRows, setToggleRows] = useState({});
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:${import.meta.env.VITE_PORT}/patients`
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       setDatas(data);
-  //       console.log(data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:${import.meta.env.VITE_PORT}/patients`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setDatas(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleToggle = (id) => {
     setToggleRows((prev) => ({

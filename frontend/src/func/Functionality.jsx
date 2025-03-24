@@ -1,13 +1,14 @@
-export const HandleRegister = async (event, inpt, setInpt) => {
+export const HandleRegister = async (event, inpt ) => {
     event.preventDefault();
 
     const firstname = inpt.patientFirstName.trim();
     const lastname = inpt.patientLastName.trim();
     const age = inpt.patientAge.toString().trim();
-    const disease = inpt.disease.trim();
+    const disease = inpt.disease?.trim();
     const phoneNumber = inpt.phoneNumber.trim();
+    const sex = inpt.sex?.trim();
 
-    if (!firstname || !lastname || !age || !disease || !phoneNumber) {
+    if (!firstname || !lastname || !age || !disease || !phoneNumber || !sex) {
         alert("Please fill in all fields correctly.");
         return;
     }
@@ -18,7 +19,8 @@ export const HandleRegister = async (event, inpt, setInpt) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 firstname,
-                lastname,                
+                lastname,
+                sex,
                 age: Number(age),
                 disease,
                 phoneNumber,
@@ -78,7 +80,7 @@ export const HandleUpdate = async (event, editId, setEditId, setEditData, setEdi
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 firstname: editData.patientFirstName,
-                lastname: editData.patientLastName,                
+                lastname: editData.patientLastName,
                 age: editData.patientAge,
                 phoneNumber: editData.phoneNumber,
                 disease: editData.disease,

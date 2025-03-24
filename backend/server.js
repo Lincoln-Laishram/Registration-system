@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema(
         patient_id: Number,
         firstname: String,
         lastname: String,
+        sex:String,
         age: Number,
         disease: String,
         date: { type: Date, default: Date.now },
@@ -62,6 +63,7 @@ app.post('/patients',
         body('firstname').notEmpty().withMessage('First Name is required').isString(),
         body('lastname').notEmpty().withMessage('Last Name is required').isString(),
         body('age').notEmpty().withMessage('Age is required').isInt(),
+        body('sex').notEmpty().withMessage('Sex is required').isString(),
         body('disease').notEmpty().withMessage('Disease name is required').isString(),
         body('phoneNumber').notEmpty().withMessage('Valid phone number is required').isString(),
     ],
@@ -72,7 +74,7 @@ app.post('/patients',
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const { firstname, lastname, disease, age, phoneNumber } = req.body;
+            const { firstname, lastname, sex, disease, age, phoneNumber } = req.body;
 
             // Auto-increment patient_id
             const lastPatient = await patientModel.findOne().sort({ patient_id: -1 });
@@ -82,6 +84,7 @@ app.post('/patients',
                 patient_id: newPatientId,
                 firstname,
                 lastname,
+                sex,
                 age,
                 disease,
                 phoneNumber
@@ -97,11 +100,11 @@ app.post('/patients',
 app.patch('/patients/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const { firstname, lastname, age, disease, phoneNumber } = req.body;
+        const { firstname, lastname, age,sex, disease, phoneNumber } = req.body;
 
         const updatedPatient = await patientModel.findOneAndUpdate(
             { patient_id: id },
-            { firstname, lastname, age, disease, phoneNumber },
+            { firstname, lastname,sex, age, disease, phoneNumber },
             { new: true }
         );
 

@@ -1,18 +1,16 @@
-"use client";
-
 import { useState } from "react";
 import {
   HandleRegister,
   HandleDelete,
   HandleUpdate,
 } from "@/func/Functionality";
-    // Check for empty values
 
 export const Register = () => {
   const [inpt, setInpt] = useState({
     patientFirstName: "",
     patientLastName: "",
     patientAge: "",
+    sex: "",
     disease: "",
     phoneNumber: "",
   });
@@ -35,6 +33,19 @@ export const Register = () => {
       [event.target.name]: event.target.value,
     }));
   };
+
+  const HandleSex = (event) => {
+    setInpt((prev) => ({
+      ...prev,
+      sex: event.target.value,
+    }));
+  };
+  const SelectProblems = (event) => {
+    setInpt((prev) => ({
+     ...prev,
+      disease: event.target.value,
+    }));
+  }
   const HandleCancel = () => {
     setCancelState(true);
     setEnableEdit(false);
@@ -133,22 +144,8 @@ export const Register = () => {
           </div>
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-800">
-              Diagnosis
-            </label>
-            <input
-              type="text"
-              value={inpt.disease}
-              name="disease"
-              placeholder="Enter diagnosis 🩺"
-              onChange={HandleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-400 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition duration-150"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-800">
               Age
-            </label> 
+            </label>
             <input
               type="number"
               value={inpt.patientAge}
@@ -160,7 +157,28 @@ export const Register = () => {
             />
           </div>
           <div>
-            <input type="radio" name="gender" value="Male" onClick={(e)=>{console.log(e.target.value)}}/> Male <input type="radio" name="gender" value="Female" onClick={(e)=>{console.log(e.target.value)}}/> Female
+            <input
+              type="radio"
+              name="gender"
+              value="Male"
+              onChange={HandleSex}
+            /> Male
+            <input
+              type="radio"
+              name="gender"
+              value="Female"
+              onChange={HandleSex}
+            />
+            Female
+          </div>
+          <div>
+            <select name="cars" id="cars" onChange={SelectProblems}>
+              <option value="Select problems" hidden>Select problems</option>
+                <option value="Tooth Decay" onChange={SelectProblems}>Tooth Decay</option>
+                <option value="Tooth Sensitivity" onChange={SelectProblems}>Tooth Sensitivity</option>
+                <option value="Gingivitis" onChange={SelectProblems}>Gingivitis</option>
+                <option value="Periodontis" onChange={SelectProblems}>Periodontitis</option>
+            </select>
           </div>
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-800">
