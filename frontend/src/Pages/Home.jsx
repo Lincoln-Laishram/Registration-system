@@ -23,6 +23,7 @@ export const Register = () => {
   const [editData, setEditData] = useState({
     patientFirstName: "",
     patientLastName: "",
+    sex: "",
     disease: "",
     patientAge: "",
     phoneNumber: "",
@@ -74,6 +75,7 @@ export const Register = () => {
         setEditData({
           patientFirstName: patient.firstname,
           patientLastName: patient.lastname,
+          sex:patient.sex,
           disease: patient.disease,
           patientAge: patient.age,
           phoneNumber: patient.phoneNumber,
@@ -120,7 +122,7 @@ export const Register = () => {
           </button>
           <button
             onClick={() => {
-              setEnableEdit(true);
+              setEnableEdit(true);cancelState
               setCancelState(false);
             }}
             className="w-full bg-blue-700 text-white py-2 font-medium hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition duration-200 cursor-pointer"
@@ -129,7 +131,7 @@ export const Register = () => {
           </button>
         </div>
         <DeletePatient cancelState={cancelState} pid={pid} setPid={setPid} HandleDelete={HandleDelete}/>
-        <EditPatient enableEdit={enableEdit} cancelState={cancelState} pid={pid} setPid={setPid} HandleEdit={HandleEdit} editForm={editForm} HandleUpdate={HandleUpdate} editId={editId} setEditId={setEditId} setEditData={setEditData} setEditForm={setEditForm} editData={editData} HandleEditChange={HandleEditChange}/>
+        <EditPatient enableEdit={enableEdit} cancelState={cancelState} pid={pid} setPid={setPid} HandleEdit={HandleEdit} editForm={editForm} HandleUpdate={HandleUpdate} editId={editId} setEditId={setEditId} setEditData={setEditData} setEditForm={setEditForm} editData={editData} HandleSex={HandleSex} SelectProblems={SelectProblems} HandleEditChange={HandleEditChange}/>
       </div>
     </div>
   );

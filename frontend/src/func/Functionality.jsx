@@ -81,6 +81,7 @@ export const HandleUpdate = async (event, editId, setEditId, setEditData, setEdi
             body: JSON.stringify({
                 firstname: editData.patientFirstName,
                 lastname: editData.patientLastName,
+                sex:editData.sex,
                 age: editData.patientAge,
                 phoneNumber: editData.phoneNumber,
                 disease: editData.disease,

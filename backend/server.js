@@ -100,7 +100,7 @@ app.post('/patients',
 app.patch('/patients/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const { firstname, lastname, age,sex, disease, phoneNumber } = req.body;
+        const { firstname, lastname, age, sex, disease, phoneNumber } = req.body;
 
         const updatedPatient = await patientModel.findOneAndUpdate(
             { patient_id: id },

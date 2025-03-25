@@ -1,6 +1,5 @@
 import React from "react";
-
-export const RegisterPatient = ({inpt, setInpt, HandleRegister, HandleChange, HandleSex, SelectProblems}) => {
+export const RegisterPatient = ({ inpt, setInpt, HandleRegister, HandleChange, HandleSex, SelectProblems }) => {
     return (
         <>
             <form
@@ -64,7 +63,7 @@ export const RegisterPatient = ({inpt, setInpt, HandleRegister, HandleChange, Ha
                     Female
                 </div>
                 <div>
-                    <select name="cars" id="cars" onChange={SelectProblems}>
+                    <select name="tooth-problems" id="problems" onChange={SelectProblems}>
                         <option value="Select problems" hidden>Select problems</option>
                         <option value="Tooth Decay" onChange={SelectProblems}>Tooth Decay</option>
                         <option value="Tooth Sensitivity" onChange={SelectProblems}>Tooth Sensitivity</option>
@@ -145,6 +144,7 @@ export const EditPatient = ({
     setEditData,
     setEditForm,
     editData,
+    SelectProblems,
     HandleEditChange, }) => {
     if (!enableEdit) return null; // Prevent rendering if cancelState is false
     return (
@@ -220,20 +220,13 @@ export const EditPatient = ({
                                     className="w-full px-4 py-2 border border-gray-400 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition duration-150"
                                 />
                             </div>
-                            <div className="space-y-1">
-                                <label className="block text-sm font-medium text-gray-800">
-                                    Diagnosis
-                                </label>
-                                <input
-                                    type="text"
-                                    name="disease"
-                                    placeholder="Enter diagnosis 🩺"
-                                    value={editData.disease}
-                                    onChange={HandleEditChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-400 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition duration-150"
-                                />
-                            </div>
+                            <select name="disease" id="problems" value={editData.disease} onChange={HandleEditChange}>
+                                <option value="Select problems" hidden>Select problems</option>
+                                <option value="Tooth Decay" onChange={SelectProblems}>Tooth Decay</option>
+                                <option value="Tooth Sensitivity" onChange={SelectProblems}>Tooth Sensitivity</option>
+                                <option value="Gingivitis" onChange={SelectProblems}>Gingivitis</option>
+                                <option value="Periodontis" onChange={SelectProblems}>Periodontitis</option>
+                            </select>
                             <div className="space-y-1">
                                 <label className="block text-sm font-medium text-gray-800">
                                     Age
@@ -247,6 +240,23 @@ export const EditPatient = ({
                                     required
                                     className="w-full px-4 py-2 border border-gray-400 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition duration-150"
                                 />
+                            </div>
+                            <div>
+                                <input
+                                    type="radio"
+                                    name="sex"
+                                    value="Male"
+                                    checked={editData.sex === "Male"}
+                                    onChange={HandleEditChange}
+                                /> Male
+                                <input
+                                    type="radio"
+                                    name="sex"
+                                    value="Female"
+                                    checked={editData.sex === "Female"}
+                                    onChange={HandleEditChange}
+                                />
+                                Female
                             </div>
                             <div className="space-y-1">
                                 <label className="block text-sm font-medium text-gray-800">
