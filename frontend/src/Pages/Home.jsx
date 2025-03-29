@@ -60,7 +60,7 @@ export const Register = () => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:2005/patients", {
+      const response = await fetch(`http://localhost:${import.meta.env.VITE_PORT}/patients`, {
         method: "GET",
       });
       if (!response.ok) {

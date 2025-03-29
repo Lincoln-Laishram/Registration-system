@@ -8,127 +8,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { data } from "react-router-dom";
 
 export const PatientTable = () => {
   const [datas, setDatas] = useState([]);
   const [searchName, setSearchName] = useState("");
-
-  let patients = [
-    {
-      sl: 1,
-      pid: "P1001",
-      firstName: "John",
-      lastName: "Doe",
-      age: 35,
-      disease: "Flu",
-      registrationDate: "2024-03-10",
-      phoneNumber: "9876543210",
-      status: "Admitted",
-    },
-    {
-      sl: 11,
-      pid: "P1002",
-      firstName: "Jane",
-      lastName: "Smith",
-      age: 28,
-      disease: "Migraine",
-      registrationDate: "2024-03-12",
-      phoneNumber: "8765432109",
-      status: "Discharged",
-    },
-    {
-      sl: 3,
-      pid: "P1003",
-      firstName: "Michael",
-      lastName: "Brown",
-      age: 42,
-      disease: "Diabetes",
-      registrationDate: "2024-03-15",
-      phoneNumber: "7654321098",
-      status: "Under Treatment",
-    },
-    {
-      sl: 4,
-      pid: "P1004",
-      firstName: "Emily",
-      lastName: "Johnson",
-      age: 30,
-      disease: "Hypertension",
-      registrationDate: "2024-03-18",
-      phoneNumber: "6543210987",
-      status: "Admitted",
-    },
-    {
-      sl: 5,
-      pid: "P1005",
-      firstName: "David",
-      lastName: "Williams",
-      age: 50,
-      disease: "Arthritis",
-      registrationDate: "2024-03-20",
-      phoneNumber: "5432109876",
-      status: "Discharged",
-    },
-    {
-      sl: 6,
-      pid: "P1006",
-      firstName: "Sophia",
-      lastName: "Miller",
-      age: 25,
-      disease: "Cold",
-      registrationDate: "2024-03-22",
-      phoneNumber: "4321098765",
-      status: "Under Treatment",
-    },
-    {
-      sl: 7,
-      pid: "P1007",
-      firstName: "Liam",
-      lastName: "Anderson",
-      age: 40,
-      disease: "Asthma",
-      registrationDate: "2024-03-24",
-      phoneNumber: "3210987654",
-      status: "Admitted",
-    },
-    {
-      sl: 8,
-      pid: "P1008",
-      firstName: "Olivia",
-      lastName: "Martinez",
-      age: 29,
-      disease: "Pneumonia",
-      registrationDate: "2024-03-26",
-      phoneNumber: "2109876543",
-      status: "Discharged",
-    },
-    {
-      sl: 9,
-      pid: "P1009",
-      firstName: "Ethan",
-      lastName: "Harris",
-      age: 55,
-      disease: "Heart Disease",
-      registrationDate: "2024-03-28",
-      phoneNumber: "1098765432",
-      status: "Under Treatment",
-    },
-    {
-      sl: 10,
-      pid: "P1010",
-      firstName: "Ava",
-      lastName: "Clark",
-      age: 33,
-      disease: "Allergy",
-      registrationDate: "2024-03-30",
-      phoneNumber: "0987654321",
-      status: "Admitted",
-    },
-  ];
-  const [filteredPatients, setFilteredPatients] = useState(patients);
-
+  const [filteredPatients, setFilteredPatients] = useState([]);
   const [toggleRows, setToggleRows] = useState({});
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -140,7 +26,7 @@ export const PatientTable = () => {
         }
         const data = await response.json();
         setDatas(data);
-        console.log(data);
+        setFilteredPatients(data);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -155,31 +41,31 @@ export const PatientTable = () => {
     }));
   };
 
-  // const HandleDelete = async (id) => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:${import.meta.env.VITE_PORT}/patients/${id}`,
-  //       {
-  //         method: "DELETE",
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-  //     setDatas((prev) => prev.filter((patient) => patient.patient_id !== id));
-  //   } catch (error) {
-  //     console.error("Delete error:", error);
-  //   }
-  // };
+  const HandleDelete = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:${import.meta.env.VITE_PORT}/patients/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      setFilteredPatients((prev) => prev.filter((patient) => patient.patient_id !== id));
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchName(query);
     setFilteredPatients(
-      patients.filter(
+      datas.filter(
         (patient) =>
-          patient.firstName.toLowerCase().includes(query) ||
-          patient.sl.toString().includes(query)
+          patient.firstname.toLowerCase().includes(query) ||
+          patient.patient_id.toString().includes(query)
       )
     );
   };
@@ -203,12 +89,6 @@ export const PatientTable = () => {
           value={searchName}
           onChange={handleSearch}
         />
-        <button
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-150"
-          onClick={handleSearch}
-        >
-          Search
-        </button>
       </div>
 
       <section>
@@ -236,22 +116,22 @@ export const PatientTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredPatients.map((patient) => (
+            {filteredPatients.map((patient, index) => (
               <TableRow
-                key={patient.pid}
+                key={index}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-100"
               >
                 <TableCell className="py-3 px-4 text-sm text-gray-700">
-                  {patient.sl}
+                  {index + 1}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-sm text-gray-700 font-mono">
-                  {patient.pid}
+                  {patient.patient_id}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-sm text-gray-700">
-                  {patient.firstName}
+                  {patient.firstname}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-sm text-gray-700">
-                  {patient.lastName}
+                  {patient.lastname}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-sm text-gray-700">
                   {patient.age}
@@ -260,7 +140,7 @@ export const PatientTable = () => {
                   {patient.disease}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-sm text-gray-700">
-                  {patient.registrationDate}
+                  {patient.date}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-sm text-gray-700">
                   {patient.phoneNumber}
@@ -270,12 +150,12 @@ export const PatientTable = () => {
                     <input
                       type="checkbox"
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                      onChange={() => handleToggle(patient.pid)}
+                      onChange={() => handleToggle(patient.patient_id)}
                     />
-                    {toggleRows[patient.pid] && (
+                    {toggleRows[patient.patient_id] && (
                       <FaRegTrashCan
                         className="text-lg text-red-500 hover:text-red-600 cursor-pointer transition-colors duration-100"
-                        onClick={() => HandleDelete(patient.pid)}
+                        onClick={() => HandleDelete(patient.patient_id)}
                       />
                     )}
                   </div>

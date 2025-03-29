@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import mongoose from "mongoose";
-const patientDB = mongoose.createConnection(process.env.URL_DB)
+const patientDB = mongoose.createConnection(process.env.URL_ATLAS)
 patientDB.on("connected",()=>{
     console.log("Patient database connected successfully");
 })
@@ -11,13 +11,13 @@ patientDB.on("error", (err) => {
 });
 
 
-const adminDB = mongoose.createConnection(process.env.URL_ADMIN)
+// const adminDB = mongoose.createConnection(process.env.URL_ADMIN)
 
-adminDB.on("connected",()=>{
-    console.log("Admin database connected successfully");
-})
-adminDB.on("error",(err)=>{
-    console.error("Error connecting to Admin:", err);
-})
+// adminDB.on("connected",()=>{
+//     console.log("Admin database connected successfully");
+// })
+// adminDB.on("error",(err)=>{
+//     console.error("Error connecting to Admin:", err);
+// })
 
-export {patientDB, adminDB}
+export default patientDB;

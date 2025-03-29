@@ -3,7 +3,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { patientDB, adminDB } from "./connection.js";
+// import { patientDB, adminDB } from "./connection.js";
+import patientDB from './connection.js'
 import { body, validationResult } from 'express-validator';
 dotenv.config();
 
@@ -27,17 +28,17 @@ const userSchema = new mongoose.Schema(
     { collection: "patients" }
 );
 
-const adminSchema = new mongoose.Schema(
-    {
-        admin_id: String,
-        admin_password: String,
-    },
-    { collection: "adminUsers" }
-);
+// const adminSchema = new mongoose.Schema(
+//     {
+//         admin_id: String,
+//         admin_password: String,
+//     },
+//     { collection: "adminUsers" }
+// );
 
 // Define Models
 const patientModel = patientDB.model("patients", userSchema);
-const adminModel = adminDB.model("adminUsers", adminSchema);
+// const adminModel = adminDB.model("adminUsers", adminSchema);
 
 // Routes
 app.get('/patients', async (req, res) => {
@@ -49,14 +50,14 @@ app.get('/patients', async (req, res) => {
     }
 });
 
-app.get('/admin', async (req, res) => {
-    try {
-        const adminData = await adminModel.find();
-        res.json(adminData);
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error", message: error.message });
-    }
-});
+// app.get('/admin', async (req, res) => {
+//     try {
+//         const adminData = await adminModel.find();
+//         res.json(adminData);
+//     } catch (error) {
+//         res.status(500).json({ error: "Internal server error", message: error.message });
+//     }
+// });
 
 app.post('/patients',
     [
@@ -75,8 +76,6 @@ app.post('/patients',
             }
 
             const { firstname, lastname, sex, disease, age, phoneNumber } = req.body;
-
-            // Auto-increment patient_id
             const lastPatient = await patientModel.findOne().sort({ patient_id: -1 });
             const newPatientId = lastPatient ? lastPatient.patient_id + 1 : 100;
 
@@ -111,7 +110,6 @@ app.patch('/patients/:id', async (req, res) => {
         if (!updatedPatient) {
             return res.status(404).json({ error: "Patient not found" });
         }
-
         res.status(200).json(updatedPatient);
     } catch (error) {
         res.status(500).json({ error: "Internal server error", message: error.message });
@@ -126,7 +124,6 @@ app.delete('/patients/:id', async (req, res) => {
         if (!deletedPatient) {
             return res.status(404).json({ error: "Patient not found" });
         }
-
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ error: "Internal server error", message: error.message });
@@ -134,6 +131,6 @@ app.delete('/patients/:id', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running`);
 });
 /* More changes to come */

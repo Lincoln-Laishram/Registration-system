@@ -7,24 +7,24 @@ export const AdminLogin = () => {
   const [inpt, setInpt] = useState({ admin_id: "", admin_password: "" });
   const [loginMessage, setLoginMessage] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:${import.meta.env.VITE_PORT}/admin`
-        );
-        console.log(response);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setAdmins(data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:${import.meta.env.VITE_PORT}/admin`
+  //       );
+  //       console.log(response);
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+  //       const data = await response.json();
+  //       setAdmins(data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const HandleChange = (e) => {
     setInpt((prev) => ({
